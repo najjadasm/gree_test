@@ -723,12 +723,7 @@ bool SinclairACCNT::processUnitReport()
     /* if there is no external sensor mapped to represent current temperature we will get data from AC unit */
     if (this->current_temperature_sensor_ == nullptr)
     {
-float rawTemp = (float)(this->serialProcess_.data[protocol::REPORT_TEMP_ACT_BYTE]);
-ESP_LOGW(TAG, "Raw Temp Byte: %f", rawTemp);
-
-float newCurrentTemperature = rawTemp; // مؤقت بدون تعديل
-if (this->current_temperature != newCurrentTemperature) hasChanged = true;
-this->update_current_temperature(newCurrentTemperature);
+float newCurrentTemperature = ((this->serialProcess_.data[protocol::REPORT_TEMP_ACT_BYTE] - protocol::REPORT_TEMP_ACT_OFF) / protocol::REPORT_TEMP_ACT_DIV);
     }
 
     std::string verticalSwing = determine_vertical_swing();
