@@ -227,87 +227,87 @@ void SinclairACCNT::send_packet()
     uint8_t target_temperature = ((((uint8_t)this->target_temperature) - protocol::REPORT_TEMP_SET_OFF) << protocol::REPORT_TEMP_SET_POS);
     packet[protocol::REPORT_TEMP_SET_BYTE] |= (target_temperature & protocol::REPORT_TEMP_SET_MASK);
 
-    /* FAN SPEED --------------------------------------------------------------------------- */
-    /* below will default to AUTO */
-    uint8_t fanSpeed1 = 0;
-    uint8_t fanSpeed2 = 0;
-    bool    fanQuiet  = false;
-    bool    fanTurbo  = false;
+/* FAN SPEED --------------------------------------------------------------------------- */
+/* below will default to AUTO */
+uint8_t fanSpeed1 = 0;
+uint8_t fanSpeed2 = 0;
+bool    fanQuiet  = false;
+bool    fanTurbo  = false;
 
-    if (this->custom_fan_mode == fan_modes::FAN_AUTO)
-    {
-        fanSpeed1 = 0;
-        fanSpeed2 = 0;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_LOW)
-    {
-        fanSpeed1 = 1;
-        fanSpeed2 = 1;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_QUIET)
-    {
-        fanSpeed1 = 1;
-        fanSpeed2 = 1;
-        fanQuiet  = true;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_MEDL)
-    {
-        fanSpeed1 = 2;
-        fanSpeed2 = 2;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_MED)
-    {
-        fanSpeed1 = 3;
-        fanSpeed2 = 2;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_MEDH)
-    {
-        fanSpeed1 = 4;
-        fanSpeed2 = 3;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_HIGH)
-    {
-        fanSpeed1 = 5;
-        fanSpeed2 = 3;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
-    else if (this->custom_fan_mode == fan_modes::FAN_TURBO)
-    {
-        fanSpeed1 = 5;
-        fanSpeed2 = 3;
-        fanQuiet  = false;
-        fanTurbo  = true;
-    }
-    else
-    {
-        fanSpeed1 = 0;
-        fanSpeed2 = 0;
-        fanQuiet  = false;
-        fanTurbo  = false;
-    }
+if (this->custom_fan_mode == fan_modes::FAN_AUTO)
+{
+    fanSpeed1 = 0x00;
+    fanSpeed2 = 0x00;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_LOW)
+{
+    fanSpeed1 = 0x20;
+    fanSpeed2 = 0x01;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_QUIET)
+{
+    fanSpeed1 = 0x20;
+    fanSpeed2 = 0x01;
+    fanQuiet  = true;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_MEDL)
+{
+    fanSpeed1 = 0x40;
+    fanSpeed2 = 0x02;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_MED)
+{
+    fanSpeed1 = 0x60;
+    fanSpeed2 = 0x02;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_MEDH)
+{
+    fanSpeed1 = 0x80;
+    fanSpeed2 = 0x03;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_HIGH)
+{
+    fanSpeed1 = 0xA0;
+    fanSpeed2 = 0x03;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
+else if (this->custom_fan_mode == fan_modes::FAN_TURBO)
+{
+    fanSpeed1 = 0xA0;
+    fanSpeed2 = 0x03;
+    fanQuiet  = false;
+    fanTurbo  = true;
+}
+else
+{
+    fanSpeed1 = 0x00;
+    fanSpeed2 = 0x00;
+    fanQuiet  = false;
+    fanTurbo  = false;
+}
 
-    packet[protocol::REPORT_FAN_SPD1_BYTE] |= (fanSpeed1 << protocol::REPORT_FAN_SPD1_POS);
-    packet[protocol::REPORT_FAN_SPD2_BYTE] |= (fanSpeed2 << protocol::REPORT_FAN_SPD2_POS);
-    if (fanTurbo)
-    {
-        packet[protocol::REPORT_FAN_TURBO_BYTE] |= protocol::REPORT_FAN_TURBO_MASK;
-    }
-    if (fanQuiet)
-    {
-        packet[protocol::REPORT_FAN_QUIET_BYTE] |= protocol::REPORT_FAN_QUIET_MASK;
-    }
+packet[protocol::REPORT_FAN_SPD1_BYTE] |= fanSpeed1;
+packet[protocol::REPORT_FAN_SPD2_BYTE] |= fanSpeed2;
+if (fanTurbo)
+{
+    packet[protocol::REPORT_FAN_TURBO_BYTE] |= protocol::REPORT_FAN_TURBO_MASK;
+}
+if (fanQuiet)
+{
+    packet[protocol::REPORT_FAN_QUIET_BYTE] |= protocol::REPORT_FAN_QUIET_MASK;
+}
 
     /* VERTICAL SWING --------------------------------------------------------------------------- */
     uint8_t mode_vertical_swing = protocol::REPORT_VSWING_OFF;
